@@ -121,7 +121,7 @@ class View: UIView {
 			return
 		}
 
-		tickCount = tickCount + 10 // ideally this would be + 5 and inter-frameduration would be 1/2 current value, but ImageIO doesn't seem to want to make that animate fast
+		tickCount = tickCount + 10 // ideally this would be + 5 and inter-frame duration would be 1/2 current value, but ImageIO doesn't seem to want to make that animate fast
 	}
 
 	override func willMove(toWindow newWindow: UIWindow?) {
