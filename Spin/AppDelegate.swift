@@ -27,8 +27,8 @@ func %(lhs: CGFloat, rhs: CGFloat) -> CGFloat {
 }
 
 enum Config {
-  case same(word: String)
-  case diff(word: String, bgWord: String)
+	case same(word: String)
+	case diff(word: String, bgWord: String)
 }
 
 // MARK: - The Fun Part
@@ -69,20 +69,20 @@ class View: UIView {
 
 	var config: Config? {
 		didSet {
-      let fileName: String
-      switch self.config {
-      case .same(word: let word):
-        foreground.text = word
-        background.text = word
-        fileName = "\(word)"
-      case .diff(word: let word, bgWord: let bgWord):
-        foreground.text = word
-        background.text = bgWord
-        fileName = "\(word)-\(bgWord)"
-      case .none:
-        fileName = "fuck"
-        break
-      }
+			let fileName: String
+			switch self.config {
+			case .same(word: let word):
+				foreground.text = word
+				background.text = word
+				fileName = "\(word)"
+			case .diff(word: let word, bgWord: let bgWord):
+				foreground.text = word
+				background.text = bgWord
+				fileName = "\(word)-\(bgWord)"
+			case .none:
+				fileName = "fuck"
+				break
+			}
 			background.sizeToFit()
 			foreground.sizeToFit()
 
@@ -154,7 +154,7 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 
 		let v = View(frame: .init(origin: .zero, size: .init(width: View.width, height: View.height)))
-    v.config = .diff(word: "6", bgWord: "9")
+		v.config = .diff(word: "6", bgWord: "9")
 
 		view.addSubview(v)
 	}
