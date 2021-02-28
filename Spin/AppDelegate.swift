@@ -23,6 +23,8 @@ func %(lhs: CGFloat, rhs: CGFloat) -> CGFloat {
 	lhs.truncatingRemainder(dividingBy: rhs)
 }
 
+// MARK: - The Fun Part
+
 struct Config {
 	// if words.count == 1 than word will be repeated twice and the top layer will animate
 	init(words: [String], animationIndex: Int = 0, animationOffset: CGPoint = .zero) {
@@ -36,8 +38,6 @@ struct Config {
 	let animationOffset: CGPoint
 	// unless this gets an a list of words and they can all animate
 }
-
-// MARK: - The Fun Part
 
 class View: UIView {
 	static let font = UIFont.systemFont(ofSize: 96, weight: .black)
