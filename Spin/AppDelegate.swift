@@ -117,6 +117,8 @@ class View: UIView {
 
 			let final = CGImageDestinationFinalize(destination)
 			print("saved? \(final)")
+
+			return
 		}
 
 		tickCount = tickCount + 10 // ideally this would be + 5 and inter-frameduration would be 1/2 current value, but ImageIO doesn't seem to want to make that animate fast
