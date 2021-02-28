@@ -26,9 +26,16 @@ func %(lhs: CGFloat, rhs: CGFloat) -> CGFloat {
 	lhs.truncatingRemainder(dividingBy: rhs)
 }
 
-enum Config {
-	case same(word: String)
-	case diff(word: String, bgWord: String)
+struct Config {
+	// if words.count == 1 than word will be repeated twice and the top layer will animate
+	init(words: [String], animationIndex: Int = 0) {
+		self.words = words
+		self.animationIndex = animationIndex
+	}
+
+	let words: [String]
+	let animationIndex: Int // change to Int for word index to  animate, maybe
+	// unless this gets an a list of words and they can all animate
 }
 
 // MARK: - The Fun Part
@@ -69,27 +76,23 @@ class View: UIView {
 
 	var config: Config? {
 		didSet {
-			let fileName: String
-			switch self.config {
-			case .same(word: let word):
-				foreground.text = word
-				background.text = word
-				fileName = "\(word)"
-			case .diff(word: let word, bgWord: let bgWord):
-				foreground.text = word
-				background.text = bgWord
-				fileName = "\(word)-\(bgWord)"
-			case .none:
-				fileName = "fuck"
-				break
-			}
+			let fileName = config?.words.joined(separator: "-")
+			background.text = config?.words[0]
+			foreground.text = config?.words.count == 1 ? config?.words[0] : config?.words[1]
+
 			background.sizeToFit()
 			foreground.sizeToFit()
+
+			if config?.animationIndex == 1 || config?.words.count == 1 {
+				bringSubviewToFront(foreground)
+			} else {
+				bringSubviewToFront(background)
+			}
 
 			// lol
 			// break out of the sandbox and save to the actual desktop instead of simulator desktop, at least with iOS 14 sim on Xcode 12.4
 			let components = ("~" as NSString).expandingTildeInPath.components(separatedBy: "/")
-			let path = "/" + components[1] + "/" + components[2] + "/Desktop/\(fileName).gif"
+			let path = "/" + components[1] + "/" + components[2] + "/Desktop/\(fileName!).gif"
 			let url = URL(fileURLWithPath: path)
 			print(url)
 			destination = CGImageDestinationCreateWithURL(url as CFURL, kUTTypeGIF, 37, nil)!
@@ -114,9 +117,20 @@ class View: UIView {
 		var point = center
 		point.x += (dx * cosine - dy * sine)
 		point.y += (dx * sine + dy * cosine)
-		foreground.center = point
 
-		background.center = center
+		if config?.animationIndex == 1 || config?.words.count == 1 {
+			foreground.center = point
+			background.center = center
+
+			bringSubviewToFront(foreground)
+		} else {
+			bringSubviewToFront(background)
+
+			foreground.center = center
+			background.center = point
+		}
+
+
 		background.textColor = .init(hue: foregroundHue / 360.0, saturation: 0.69, brightness: 1.0, alpha: 1.0)
 		foreground.textColor = .init(hue: backgroundHue / 360.0, saturation: 0.69, brightness: 1.0, alpha: 1.0)
 
@@ -154,7 +168,7 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 
 		let v = View(frame: .init(origin: .zero, size: .init(width: View.width, height: View.height)))
-		v.config = .diff(word: "6", bgWord: "9")
+		v.config = Config(words: ["🏝", "🌊"], animationIndex: 1)
 
 		view.addSubview(v)
 	}
