@@ -26,6 +26,11 @@ func %(lhs: CGFloat, rhs: CGFloat) -> CGFloat {
 	lhs.truncatingRemainder(dividingBy: rhs)
 }
 
+enum Config {
+  case same(word: String)
+  case diff(word: String, bgWord: String)
+}
+
 // MARK: - The Fun Part
 
 class View: UIView {
@@ -62,19 +67,29 @@ class View: UIView {
 
 	var tickCount = 0
 
-	var word: String! {
-		get { background.text }
-		set {
-			background.text = newValue
+	var config: Config? {
+		didSet {
+      let fileName: String
+      switch self.config {
+      case .same(word: let word):
+        foreground.text = word
+        background.text = word
+        fileName = "\(word)"
+      case .diff(word: let word, bgWord: let bgWord):
+        foreground.text = word
+        background.text = bgWord
+        fileName = "\(word)-\(bgWord)"
+      case .none:
+        fileName = "fuck"
+        break
+      }
 			background.sizeToFit()
-
-			foreground.text = newValue
 			foreground.sizeToFit()
 
 			// lol
 			// break out of the sandbox and save to the actual desktop instead of simulator desktop, at least with iOS 14 sim on Xcode 12.4
 			let components = ("~" as NSString).expandingTildeInPath.components(separatedBy: "/")
-			let path = "/" + components[1] + "/" + components[2] + "/Desktop/\(newValue!).gif"
+			let path = "/" + components[1] + "/" + components[2] + "/Desktop/\(fileName).gif"
 			let url = URL(fileURLWithPath: path)
 			print(url)
 			destination = CGImageDestinationCreateWithURL(url as CFURL, kUTTypeGIF, 37, nil)!
@@ -139,7 +154,7 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 
 		let v = View(frame: .init(origin: .zero, size: .init(width: View.width, height: View.height)))
-		v.word = "lol"
+    v.config = .diff(word: "6", bgWord: "9")
 
 		view.addSubview(v)
 	}
