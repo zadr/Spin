@@ -28,13 +28,15 @@ func %(lhs: CGFloat, rhs: CGFloat) -> CGFloat {
 
 struct Config {
 	// if words.count == 1 than word will be repeated twice and the top layer will animate
-	init(words: [String], animationIndex: Int = 0) {
+	init(words: [String], animationIndex: Int = 0, animationOffset: CGPoint = .zero) {
 		self.words = words
 		self.animationIndex = animationIndex
+		self.animationOffset = animationOffset
 	}
 
 	let words: [String]
 	let animationIndex: Int // change to Int for word index to  animate, maybe
+	let animationOffset: CGPoint
 	// unless this gets an a list of words and they can all animate
 }
 
@@ -115,8 +117,8 @@ class View: UIView {
 		let dy = foreground.bounds.size.height * 0.1
 
 		var point = center
-		point.x += (dx * cosine - dy * sine)
-		point.y += (dx * sine + dy * cosine)
+		point.x += (dx * cosine - dy * sine) + (config?.animationOffset.x ?? 0)
+		point.y += (dx * sine + dy * cosine) + (config?.animationOffset.y ?? 0)
 
 		if config?.animationIndex == 1 || config?.words.count == 1 {
 			foreground.center = point
@@ -168,7 +170,11 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 
 		let v = View(frame: .init(origin: .zero, size: .init(width: View.width, height: View.height)))
-		v.config = Config(words: ["🏝", "🌊"], animationIndex: 1)
+		v.config = Config(
+			words: ["🔥", "🌧"],
+			animationIndex: 1,
+			animationOffset: CGPoint(x: 0, y: -25)
+		)
 
 		view.addSubview(v)
 	}
