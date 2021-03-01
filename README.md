@@ -1,4 +1,4 @@
-![lol](lol.gif)
+![lol](lol.gif) ![🌨](🌨.gif)
 
 If you ever wanted to make emoji where a word spins around another word, here you go
 
